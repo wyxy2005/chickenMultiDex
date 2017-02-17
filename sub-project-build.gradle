@@ -8,6 +8,7 @@ buildscript {
     }
 }
 
+
 import org.apache.tools.ant.taskdefs.condition.Os
 project.ext {
     BUILD_TOOLS_VERSION = '21.1.2'
@@ -67,6 +68,7 @@ task aaptRelease (type: Exec,dependsOn:'init'){
     inputs.file "$sdk.androidJar"
     inputs.file "${rootDir}/build-outputs/demo-base-release.apk"
     inputs.file "$projectDir/AndroidManifest.xml"
+    inputs.dir "$projectDir/libs"
     inputs.dir "$projectDir/res"
     inputs.dir "$projectDir/assets"
     inputs.file "${rootDir}/chicken/build/generated/source/r/release/com/koodroid/chicken/R.java"
@@ -174,6 +176,7 @@ task obfuscateRelease(type:proguard.gradle.ProGuardTask, dependsOn:'compileRelea
 
 task dexRelease (type:Exec){
     inputs.file "${buildDir}/intermediates/classes"
+    inputs.file "$projectDir/libs/Baidu_MobAds_SDK.jar"
     outputs.file "${buildDir}/intermediates/dex/${project.name}_dex.zip"
     workingDir buildDir
     executable sdk.dex
@@ -182,6 +185,8 @@ task dexRelease (type:Exec){
     argv << '--dex'
     argv << "--output=${buildDir}/intermediates/dex/${project.name}_dex.zip"
     argv << "${buildDir}/intermediates/classes"
+    argv << "$projectDir/libs/Baidu_MobAds_SDK.jar"
+    argv << "$projectDir/libs/android-query-full.0.26.7.jar"
 
     args = argv
 }
@@ -198,4 +203,13 @@ task bundleRelease (type:Zip,dependsOn:['compileRelease','aaptRelease','dexRelea
     from zipTree("$buildDir/intermediates/dex/${project.name}_dex.zip")
     from zipTree("$buildDir/intermediates/res/resources.zip")
 }
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+
+
 

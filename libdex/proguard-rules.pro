@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep public class * extends android.app.Activity
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep public class com.umeng.fb.ui.ThreadView {
+}
+# Add for UMeng END
+
+-keep class com.baidu.** {
+ public protected *;
+}

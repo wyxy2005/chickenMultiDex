@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_item_press">#f0f0f0</color>
+    <color name="bg_item">#fff</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
+    <color name="text_item_title">#222</color>
+    <color name="bg_dim">#a0303030</color>
+</resources>

@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">sample</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="sample_text">This is sample  resource:</string>
+    <string name="app_name">Pappa Pig Puzzle</string>
+    <!--
+    <string name="banner_ad_test_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5671842906932136/5752859806</string>
+    -->
 </resources>
