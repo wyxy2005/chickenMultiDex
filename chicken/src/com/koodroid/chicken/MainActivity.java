@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -33,7 +34,7 @@ public class MainActivity extends Activity {
     public static final int ADMOB_AD_TYPE = 3;
 
 
-    public static final int DEFAULT_AD_TYPE = BAIDU_AD_TYPE;
+    public static int DEFAULT_AD_TYPE = -1;
     
     public static final String JsonName = "ad_type";
     public static final String ShowExtraAd = "show_extra_ad";
@@ -170,42 +171,64 @@ public class MainActivity extends Activity {
         }
     }
     
-    private void loadAdSwitch() {
+    private int mAdType = DEFAULT_AD_TYPE;
+	private void loadAdSwitch() {
 
-    	View adView = getBaiduBannerView();
-    	if (adView != null) {
-    		Log.d("chicken","loadSwitch: not null");
-    		adContainer.removeAllViews();
-    		RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            adContainer.addView(adView, rllp);
-    	}
-    	
-        Log.d("chicken","loadSwitch:");
+		mAdType = mPrefs.getInt(JsonName, DEFAULT_AD_TYPE);
+		Log.d("chicken", "loadSwitch:" + mAdType);
+		if (mAdType == BAIDU_AD_TYPE) {
+			View adView = getBaiduBannerView();
+			if (adView != null) {
+				Log.d("chicken", "loadSwitch: not null");
+				adContainer.removeAllViews();
+				RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(
+						RelativeLayout.LayoutParams.FILL_PARENT,
+						RelativeLayout.LayoutParams.WRAP_CONTENT);
+				adContainer.addView(adView, rllp);
+			}
+		} else {
+			mPrefs.registerOnSharedPreferenceChangeListener(mListener);
+		}
 
-    }
+	}
+	
+	private OnSharedPreferenceChangeListener mListener = new OnSharedPreferenceChangeListener(){
+
+		@Override
+		public void onSharedPreferenceChanged(
+				SharedPreferences sharedPreferences, String key) {
+			int addType = mPrefs.getInt(JsonName, DEFAULT_AD_TYPE);
+			if (key == JsonName && mAdType != addType) {
+				Log.d("daniel","adtype change");
+				BundleBaseApplication.installBundle();
+				loadAdSwitch();
+			}
+			
+		}
+		
+	};
 
     private void showExtraAdSwitch() {
 
-         showBaiduInterstitialAd(false);
+    	showInterstitialAd();
     }
 
     public void delayShowExtraAd() {
+    	Log.d("daniel","delayShowExtraAd" );
         int addType = mPrefs.getInt(JsonName, DEFAULT_AD_TYPE);
         if (addType == BAIDU_AD_TYPE)
-            showBaiduInterstitialAd(true);
+        	showInterstitialAd();
     }
     
-    private void showBaiduInterstitialAd(boolean delay) {
+    private void showInterstitialAd() {
     	try {
             final Class AdInstance = Class.forName("com.koodroid.chicken.libdex.AdInstance");
 
-            final Class[] argsClass = new Class[2];
+            final Class[] argsClass = new Class[1];
             argsClass[0] = Activity.class;
-            argsClass[1] = Boolean.class;
             final Method method = AdInstance
                     .getMethod("showBaiduInterstitialAd", argsClass);
-            final Object value = method.invoke(null,this, delay);
+            final Object value = method.invoke(null,this);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -250,10 +273,10 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    private void clearRunCount() {
+    public void clearRunCount() {
         mPrefs.edit().putInt("lastCount", 0).commit();
         mOnResumeTime = System.currentTimeMillis();
-        Log.d("daniel","clearRunCount  ");
+        Log.d("daniel","clearRunCount  out");
     }
 
     public void setOnDownEgg() {
@@ -279,7 +302,7 @@ public class MainActivity extends Activity {
         mValue[mCurrentIndex] = mCurrentCount;
 
 
-        Log.d("daniel","handleRecord mCurrentIndex:" + mCurrentIndex + "   mCount:" + mCurrentCount + "  mRemaiCount:" + mRemainingCount);
+        //Log.d("daniel","handleRecord mCurrentIndex:" + mCurrentIndex + "   mCount:" + mCurrentCount + "  mRemaiCount:" + mRemainingCount);
         mCurrentIndex ++;
         if (mCurrentIndex >= sCount)
             mCurrentIndex = 0;
@@ -348,6 +371,7 @@ public class MainActivity extends Activity {
 
         mBaiduFailed = 0;
         loadAdSwitch();
+
 
         if (shouldShowExtraAd()) {
             showExtraAdSwitch();

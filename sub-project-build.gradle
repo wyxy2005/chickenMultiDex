@@ -204,11 +204,6 @@ task bundleRelease (type:Zip,dependsOn:['compileRelease','aaptRelease','dexRelea
     from zipTree("$buildDir/intermediates/res/resources.zip")
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
 
 
 

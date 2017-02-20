@@ -14,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId "com.koodroid.chicken"
-        versionCode 1
-        versionName "1.0"
+        versionCode 20
+        versionName "2.0.0"
     }
     buildTypes {
         debug {
@@ -225,15 +225,15 @@ task resign(type:Exec,dependsOn: 'repack'){
     argv << '-digestalg'
     argv << 'SHA1'
     argv << '-keystore'
-    argv << "$rootDir/demo.jks"
+    argv << "$rootDir/android.keystore"
     argv << '-storepass'
-    argv << '123456'
+    argv << 'koodroid123'
     argv << '-keypass'
-    argv << '123456'
+    argv << 'koodroid123'
     argv << '-signedjar'
     argv << 'demo-release-resigned.apk'
     argv << 'demo-release-repacked.apk'
-    argv << 'demo'
+    argv << 'android.keystore'
 
     args = argv
 }

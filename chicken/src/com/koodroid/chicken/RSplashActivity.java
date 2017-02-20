@@ -1,12 +1,17 @@
 package com.koodroid.chicken;
 
 import static com.koodroid.chicken.MainActivity.BAIDU_AD_TYPE;
+
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -44,6 +49,41 @@ public class RSplashActivity extends Activity {
         }
 
         setContentView(R.layout.splash);
+        RelativeLayout adsParent = (RelativeLayout) this.findViewById(R.id.adsRl);
+
+        adsParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jumpWhenCanClick();
+            }
+        });
+        
+        addBaiduSplash(adsParent);
+    }
+    
+    private void addBaiduSplash(RelativeLayout v) {
+    	boolean exception = false;
+    	try {
+            final Class AdInstance = Class.forName("com.koodroid.chicken.libdex.AdInstance");
+
+            final Class[] argsClass = new Class[2];
+            argsClass[0] = Activity.class;
+            argsClass[1] = RelativeLayout.class;
+            final Method method = AdInstance
+                    .getMethod("addBaiduSplashAd", argsClass);
+            final Object value = method.invoke(null,this, v);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            exception = true;
+        }
+		if (exception) {
+			this.getWindow().getDecorView().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					jump();
+				}
+			}, 4000);
+		}
     }
 
     boolean shouldShowSplashAd() {
@@ -68,7 +108,7 @@ public class RSplashActivity extends Activity {
      */
     public boolean canJumpImmediately = false;
 
-    private void jumpWhenCanClick() {
+    public void jumpWhenCanClick() {
         Log.d("daniel", "this.hasWindowFocus():" + this.hasWindowFocus());
         if (canJumpImmediately) {
             jump();
@@ -87,7 +127,7 @@ public class RSplashActivity extends Activity {
     /**
      * 不可点击的开屏，使用该jump方法，而不是用jumpWhenCanClick
      */
-    private void jump() {
+    public void jump() {
         Log.i("daniel", "jump");
         this.startActivity(new Intent(RSplashActivity.this, MainActivity.class));
         mPrefs.edit().putBoolean("BACK_PRESSED",mBackPressed).commit();
