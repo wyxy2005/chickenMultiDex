@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -54,9 +55,9 @@ public class DownloadService extends Service {
                     getPackageName(), PackageManager.GET_META_DATA);
 
             String msg = info.metaData.getString("UMENG_CHANNEL");
-//            String str = Build.MANUFACTURER;
-//            if (isOppo(str))
-//                return "Oppo";
+            String str = Build.MANUFACTURER;
+            if (isOppo(str))
+                return "Oppo";
             return msg;
 
         } catch (Exception e) {
