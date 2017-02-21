@@ -32,8 +32,8 @@ public class BundleBaseApplication extends Application {
         mApplication = this;
         SharedPreferences mPrefs = this.getSharedPreferences(
                 MainActivity.class.getName(), Context.MODE_PRIVATE);
-        if (!isOppo())
-        	MainActivity.DEFAULT_AD_TYPE = MainActivity.BAIDU_AD_TYPE;
+//        if (!isOppo())
+//        	MainActivity.DEFAULT_AD_TYPE = MainActivity.BAIDU_AD_TYPE;
         int addType = mPrefs.getInt(MainActivity.JsonName, MainActivity.DEFAULT_AD_TYPE);
         if (addType == MainActivity.BAIDU_AD_TYPE)
         	installBundle();
