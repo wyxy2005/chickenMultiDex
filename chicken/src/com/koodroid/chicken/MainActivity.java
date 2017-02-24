@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
     public static int DEFAULT_AD_TYPE = -1;
     
-    public static final String JsonName = "AdType";
+    public static final String JsonName = "ad_type";
     public static final String ShowExtraAd = "show_extra_ad";
     public static final String NO_ACTION_DELAY = "no_action_delay";
     private Context mContext = null;
