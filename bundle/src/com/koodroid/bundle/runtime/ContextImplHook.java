@@ -1,0 +1,39 @@
+package com.koodroid.bundle.runtime;
+
+import com.koodroid.bundle.log.Logger;
+import com.koodroid.bundle.log.LoggerFactory;
+
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+
+
+/**
+ * Android Context Hook 挂载载系统的Context中，拦截相应的方法
+ */
+public class ContextImplHook extends ContextWrapper {
+    static final Logger log;
+
+    static {
+        log = LoggerFactory.getLogcatLogger("ContextImplHook");
+    }
+
+    public ContextImplHook(Context context) {
+        super(context);
+
+    }
+
+    @Override
+    public Resources getResources() {
+        log.log("getResources is invoke", Logger.LogLevel.INFO);
+        return RuntimeArgs.delegateResources;
+    }
+
+    @Override
+    public AssetManager getAssets() {
+        log.log("getAssets is invoke", Logger.LogLevel.INFO);
+        return RuntimeArgs.delegateResources.getAssets();
+    }
+
+}

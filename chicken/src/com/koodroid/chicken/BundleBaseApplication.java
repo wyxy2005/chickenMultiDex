@@ -18,13 +18,11 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import ctrip.android.bundle.framework.BundleCore;
-import ctrip.android.bundle.framework.BundleException;
-import ctrip.android.bundle.hotpatch.HotPatchManager;
+import com.koodroid.bundle.framework.BundleCore;
+import com.koodroid.bundle.framework.BundleException;
+import com.koodroid.bundle.hotpatch.HotPatchManager;
 
-/**
- * Created by yb.wang on 15/10/28.
- */
+
 public class BundleBaseApplication extends Application {
     @Override
     public void onCreate() {
