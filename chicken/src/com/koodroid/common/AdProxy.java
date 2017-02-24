@@ -24,6 +24,7 @@ public class AdProxy {
     private void setActivity(Activity activity) {
         mActivity = activity;
     }
+
     private void showInterstitialAd() {
         try {
             final Class AdInstance = Class.forName("com.koodroid.chicken.libdex.AdInstance");
@@ -32,7 +33,7 @@ public class AdProxy {
             argsClass[0] = Activity.class;
             final Method method = AdInstance
                     .getMethod("showBaiduInterstitialAd", argsClass);
-            final Object value = method.invoke(null,this);
+            final Object value = method.invoke(null,mActivity);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -47,11 +48,22 @@ public class AdProxy {
             argsClass[0] = Activity.class;
             final Method method = AdInstance
                     .getMethod("getBaiduBannerView", argsClass);
-            final Object value = method.invoke(null,this);
+            final Object value = method.invoke(null,mActivity);
             ret = (View) value;
         } catch (final Exception e) {
             e.printStackTrace();
         }
         return ret;
+    }
+
+    public static void onBaiduAdClick() {
+
+    }
+    public static void onBaiduAdFailed() {
+
+    }
+
+    public static void onBaiduAdSuccesed() {
+
     }
 }

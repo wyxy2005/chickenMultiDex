@@ -19,8 +19,14 @@ import com.baidu.mobads.SplashAdListener;
 import com.koodroid.chicken.*;
 
 public class AdInstance {
+
+    public interface AdCallback {
+        public void onAdFailed();
+        public void onAdClicked();
+        public void onAdShow();
+    }
     
-    public static View getBaiduBannerView(Activity activity) {
+    public static View getBannerView(final Activity activity ,final AdCallback callback) {
         Log.e("daniel","test Version new");
     	String adPlaceId = "2911817";
     	AdView adView = new AdView(activity, adPlaceId);
@@ -29,16 +35,18 @@ public class AdInstance {
             }
 
             public void onAdShow(JSONObject info) {
+                callback.onAdShow();
             }
             
             public void onAdReady(AdView adView) {
             }
 
             public void onAdFailed(String reason) {
-                Log.d("chicken","baidu loadFailed:");
+                callback.onAdFailed();
             }
 
             public void onAdClick(JSONObject info) {
+                callback.onAdClicked();
             }
 
             @Override
@@ -48,7 +56,7 @@ public class AdInstance {
         return adView;
     }
     
-    public static void showBaiduInterstitialAd(final Activity activity) {
+    public static void showInterstitialAd(final Activity activity,final AdCallback callback) {
         Log.d("daniel","showBaiduInterstitialAd");
 
         String adPlaceId = "2911919"; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
@@ -59,6 +67,7 @@ public class AdInstance {
             public void onAdClick(InterstitialAd arg0) {
                 Log.i("daniel", "intialad onAdClick");
                 interAd.destroy();
+                callback.onAdClicked();
             }
 
             @Override
@@ -70,17 +79,19 @@ public class AdInstance {
             @Override
             public void onAdFailed(String arg0) {
                 Log.i("daniel", "intialad onAdFailed");
+                callback.onAdFailed();
             }
 
             @Override
             public void onAdPresent() {
                 Log.i("daniel", "intialad onAdPresent");
-                clearRunCount(activity);
+                callback.onAdShow();
             }
 
             @Override
             public void onAdReady() {
                 Log.i("daniel", "intialad onAdReady");
+                interAd.showAd(activity);
             }
 
         });
